@@ -19,5 +19,21 @@ class MoneyTest extends WordSpec
         }
       }
     }
+
+    "subtracted from other Money" must {
+      "subtract the underlying amount" in {
+        forAll { (amount1: Double, amount2: Double) =>
+          Money(amount1) - Money(amount2) mustBe Money(amount1 - amount2)
+        }
+      }
+    }
+
+    "multiplied by an integer" must {
+      "multiply the underlying amount" in {
+        forAll { (amount: Double, multiple: Int) =>
+          Money(amount) * multiple  mustBe Money(amount * multiple)
+        }
+      }
+    }
   }
 }

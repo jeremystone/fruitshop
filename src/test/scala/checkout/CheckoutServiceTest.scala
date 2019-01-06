@@ -1,7 +1,7 @@
 package checkout
 
 import model.Fruit.{Apple, Orange}
-import model.Money
+import model.{Fruit, Money}
 import org.scalatest.{MustMatchers, WordSpec}
 
 /**
@@ -9,9 +9,9 @@ import org.scalatest.{MustMatchers, WordSpec}
   */
 class CheckoutServiceTest extends WordSpec with MustMatchers {
 
-  val checkoutService = new CheckoutService
-
   "CheckoutService" when {
+    val checkoutService = new CheckoutService(NoDiscountsDiscountsService)
+
     "given an empty list of scanned items" must {
       "calculate zero cost" in {
         checkoutService.checkout(Nil) mustBe
@@ -31,6 +31,25 @@ class CheckoutServiceTest extends WordSpec with MustMatchers {
       "calculate the total cost" in {
         checkoutService.checkout(List(Apple, Apple, Orange, Apple)) mustBe
           Money(2.05)
+      }
+    }
+  }
+
+  "CheckoutService" when {
+    val poundOffDiscountService = new DiscountService {
+      override def getDiscount(basket: List[Fruit]): Money = Money(1.0)
+    }
+
+    val checkoutService = new CheckoutService(poundOffDiscountService)
+
+    "offers are available" must {
+      "apply discounts" in {
+        checkoutService.checkout(List(Orange, Orange, Orange, Orange, Orange)) mustBe
+          Money(0.25)
+      }
+
+      "never result in negative cost" in {
+        checkoutService.checkout(List(Apple)) mustBe Money.Zero
       }
     }
   }
