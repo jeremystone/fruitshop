@@ -5,7 +5,7 @@ package model
   *
   * @param amountPounds Pounds with Pence as a decimal
   */
-case class Money(amountPounds: Double) {
+case class Money(amountPounds: BigDecimal) {
   /**
     * Adds money
     *
@@ -24,9 +24,9 @@ case class Money(amountPounds: Double) {
 
 
   /**
-    * Adds money
+    * Multiplies money by a factor
     *
-    * @param multiple money to add
+    * @param multiple factor to multiply by
     * @return the total money
     */
   def *(multiple: Int): Money = Money(this.amountPounds * multiple)

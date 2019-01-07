@@ -53,4 +53,13 @@ class CheckoutServiceTest extends WordSpec with MustMatchers {
       }
     }
   }
+
+  "CheckoutService" when {
+    "using the simple offers" must {
+      "apply simple offer discounts" in {
+        new CheckoutService(new SimpleOffersDiscountService).checkout(List(Apple, Apple, Apple)) mustBe
+          Money(1.20)
+      }
+    }
+  }
 }
